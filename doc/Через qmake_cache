@@ -1,0 +1,25 @@
+# project info
+TARGET = NERPA
+VERSION = r-357nm_2017.03.30.3~iter7_i386_linux
+#
+
+exists($$OUT_PWD/.qmake.cache) {
+    unix: system(rm -rf $$OUT_PWD/.qmake.cache)
+    win32: system(DEL /Q /F $$OUT_PWD/.qmake.cache) # TODO: Не протестировано
+}
+
+!infile($$OUT_PWD/.qmake.cache, top_srcdir) {
+    system("echo top_srcdir = $$PWD >> $$OUT_PWD/.qmake.cache")
+}
+
+!infile($$OUT_PWD/.qmake.cache, top_builddir) {
+    system("echo top_builddir = $$OUT_PWD >> $$OUT_PWD/.qmake.cache")
+}
+
+!infile($$OUT_PWD/.qmake.cache, project_name) {
+    system("echo project_name = $${TARGET} >> $$OUT_PWD/.qmake.cache")
+}
+
+!infile($$OUT_PWD/.qmake.cache, project_version) {
+    system("echo project_version = $${VERSION} >> $$OUT_PWD/.qmake.cache")
+}
