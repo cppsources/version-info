@@ -1,4 +1,4 @@
-include(pythonservice.pri)
+include(pythoncheck.pri)
 
 # @brief createDefinesSpecific_osVersion создание специфического определения
 # для getOsVersion()

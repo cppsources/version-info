@@ -1,4 +1,4 @@
-include(pythonservice.pri)
+include(pythoncheck.pri)
 
 # @brief createDefinesSpecific_projectName создание специфического определения для getProjectName()
 # @desc для продвижки PROJECT_NAME в файлы исходного кода (*.h, *.c, *.cpp)
