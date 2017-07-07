@@ -32,5 +32,5 @@ count(os, 1) {
 #
 
 OTHER_FILES += \
-    sysinfo.py \
-    projectinfo.py
+    projectinfo.py \
+    sysinfo.py
