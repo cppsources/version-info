@@ -1,50 +1,56 @@
-1. 
-1.1 Если проект состоит из множества подпроектов, т.е. главный pro-файл имеет следующую структуру:
+ПРОДВИЖКА ПЕРЕМЕННЫХ
 
-TEMPLATE = SUBDIRS
+Проект состоит из нескольких подпроектов и в нем определена собственная
+переменная, например myVariable. Главный pro-файл имеет структуру:
 
-SUBDIRS += \
-    src
+    TEMPLATE = SUBDIRS
 
-myVariable = value # определяется переменная (value не число !)
+    SUBDIRS += \
+        src
 
-и в нем определяется собственная переменная, например myVariable,
-то для продвижки ее значения из главного pro-файла в pro/pri файлы подпроектов,
-необходимо записать ее значение в .qmake.cache.
+    myVariable = value
 
-exists($$OUT_PWD/.qmake.cache) { # пересоздавать .qmake.cache при каждом qmake
-    unix: system(rm -rf $$OUT_PWD/.qmake.cache)
-    win32: system(DEL /Q /F $$OUT_PWD/.qmake.cache) # TODO: Не протестировано
-}
+1 Для получения значения переменной myVariable в pro/pri файлах любого
+подпроекта, необходимо записать myVariable = value в .qmake.cache:
 
-!infile($$OUT_PWD/.qmake.cache, top_srcdir) { # путь к главному pro-файлу проекта
-    system("echo top_srcdir = $$PWD >> $$OUT_PWD/.qmake.cache")
-}
+    exists($$OUT_PWD/.qmake.cache) { # удаление .qmake.cache при каждом qmake
+        unix: system(rm -rf $$OUT_PWD/.qmake.cache)
+        win32: system(DEL /Q /F $$OUT_PWD/.qmake.cache) # TODO: Протестировать
+    }
 
-!infile($$OUT_PWD/.qmake.cache, top_builddir) { # путь к директории сборки
-    system("echo top_builddir = $$OUT_PWD >> $$OUT_PWD/.qmake.cache")
-}
+    !infile($$OUT_PWD/.qmake.cache, myVariable) { # собственная переменная
+        system("echo myVariable = value >> $$OUT_PWD/.qmake.cache")
+    }
 
-!infile($$OUT_PWD/.qmake.cache, myVariable) { # собственная переменная
-    system("echo myVariable = value >> $$OUT_PWD/.qmake.cache")
-}
+    А потом в pro/pri файле прочитать ее значение: message($$myVariable)
 
-которое потом можно считать в pro/pri файле любого подпроекта, например так:
-message($$myVariable)
+2.1 Для получения значения переменной myVariable в файлах исходного
+кода (*.h, *.c, *.cpp) любого подпроекта, необходимо ее продвинуть из pro-файла,
+главного для этого подпроекта, в файлы исходного кода этого подпроекта:
 
-1.2 Если необходимо использовать это значение в файлах исходного кода какого-либо подпроекта,
-то необходимо его продвинуть из pro-файла, являющегося главным для этого подпроекта, в файлы исходного кода этого проекта, например:
-DEFINES += \
-    myVariable=value
+    DEFINES += \
+        myVariable=value
 
-а затем использовать, например так: qDebug() << myVariable, или если продвинуть таким образом:
-DEFINES += \
-    value myVariable=value
-то можно использовать не только так qDebug() << myVariable, но и так:
-#if myVariable == value
-    qDebug() << 1
-#else 
-    qDebug() << 2
-#endif
+    А потом, в файлах исходного кода, прочитать ее значение:
+    qDebug() << myVariable
 
-2. Если проект не включает в себя подпроектов, то процедуры описываемую в п. 1 можно упростить, то есть не использовать .qmake.cache, а сделать как в п. 1.2
+2.2 Если, кроме получения значения переменной myVariable (см. п. 2.1), требуется
+ее использовать в командах препроцессора (например, для условной компиляции), то
+необходимо ее продвинуть из pro-файла, главного для этого подпроекта, в файлы
+исходного кода этого подпроекта, следующим образом:
+
+    DEFINES += \
+        value myVariable=value
+
+    А потом, в файлах исходного кода, можно как прочитать ее значение:
+    qDebug() << myVariable
+    
+    так и использовать для условной компиляции:
+    #if myVariable == value
+        qDebug() << 1
+    #else 
+        qDebug() << 2
+    #endif
+
+ВОПРОС
+Может ли значение переменной myVariable быть числовым, или только текстовым?
