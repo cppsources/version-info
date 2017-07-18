@@ -27,7 +27,7 @@ DEFINES += \
     \
     $$promotionValue(PROJECT_BUILD_DATETIME, $$project_build_datetime, str) \
     $$promotionValue(PROJECT_BUILD_NUMBER_BI, $$project_build_number_bi, int) \
-    $$promotionValue(PROJECT_BUILD_DESC, $$project_build_desc, str) \
+    $$promotionValue(PROJECT_BUILD_DESC, $$project_build_desc, str)
 
 TEMPLATE = app
 
