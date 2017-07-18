@@ -1,36 +1,34 @@
-include(projectinfo.pri)
-include(sysinfo.pri)
+include(./../../projectinfo.pri)
 
 QT += core
 
 CONFIG += console
 
-VERSION = r-357nm_2016.12.08.1~gi2_i386_linux          
+message(APP.PRO:)
+message(PROJECT_MAJOR_VERSION: $${project_major_version})
+message(PROJECT_MINOR_VERSION: $${project_minor_version})
+message(PROJECT_PATCH_VERSION: $${project_patch_version})
+message(PROJECT_BUILD_NUMBER: $${project_build_number})
 
-DEFINES += \
-    $${createDefinesSpecific_osVersion()} \
-    $${createDefinesSpecific_appVersion($${VERSION})}
+message(PROJECT_NAME: $${project_name})
+message(PROJECT_BUILD_DATETIME: $${build_datetime})
+message(PROJECT_BUILD_NUMBER: $${build_number})
+message(PROJECT_BUILD_DESC: $${build_desc})
+
+#DEFINES += \
+#    PROJECT_MAJOR_VERSION=\\\"$$project_major_version\\\" \
+#    PROJECT_MINOR_VERSION=\\\"$$project_minor_version\\\" \
+#    PROJECT_PATCH_VERSION=\\\"$$project_patch_version\\\" \
+#    PROJECT_BUILD_NUMBER=\\\"$$project_build_number\\\" \
+#    \
+#    PROJECT_NAME=\\\"$$project_name\\\" \
+#    PROJECT_BUILD_DATETIME=\\\"$$build_datetime\\\" \
+#    PROJECT_BUILD_NUMBER=\\\"$$build_number\\\" \
+#    PROJECT_BUILD_DESC=\\\"$$build_desc\\\"
+
+#    $$promotionValue(PROJECT_NAME, $$project_name)
 
 TEMPLATE = app
 
 SOURCES += \
     main.cpp
-
-osVersion = $${getOsVersion()}
-
-# в зависимости от конкретной версии ОС
-contains(osVersion, MSVS) {
-    TARGET = $${TARGET}_MSVS
-}
-#
-
-# в зависимости от нескольких ОС
-os = $$find(osVersion, DEBIAN) $$find(osVersion, UBUNTU)
-count(os, 1) {
-    TARGET = $${TARGET}_DEBIAN_UBUNTU
-}
-#
-
-OTHER_FILES += \
-    projectinfo.py \
-    sysinfo.py
