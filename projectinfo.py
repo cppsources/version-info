@@ -37,7 +37,7 @@ def get_project_version(version, param):
 # @brief get_project_build_info возвращает часть информации о сборке проекта
 # @param build_info информация о сборке проекта, заданная в виде строки:
 # {build_datetime}.{build_number}~{build_desc}
-# @param $${2} часть версии проекта, которую необходимо вернуть. Допустимые
+# @param param часть версии проекта, которую необходимо вернуть. Допустимые
 # значения: build_datetime, build_number, build_desc
 # @return в зависимости от param, если param не задано или не существует то
 # сообщение об ошибке
