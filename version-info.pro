@@ -12,8 +12,9 @@ SUBDIRS += \
     src
 
 VERSION = 1.2.3.4
-BUILD_INFO = 2017-07-11 11:50:48.2~gi2
+BUILD_INFO = 2017-07-11_11:50:48.2~gi2
 
+writeProjectName()
 writeProjectVersion($${VERSION})
 writeProjectBuildInfo($${BUILD_INFO})
 

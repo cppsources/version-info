@@ -3,13 +3,14 @@
 
 import os
 
-# @brief get_project_name возвращает имя проекта (в верхнем регистре)
+# @brief get_project_name возвращает имя проекта (имя в верхнем регистре и соответствует макросу)
 # @desc в основе имя главного pro-файла проекта
 # @param pro_file_path путь к главному pro-файлу проекта
 def get_project_name(pro_file_path):
     basename = os.path.basename(pro_file_path)
     project_name = os.path.splitext(basename)[0]
     project_name = project_name.upper()
+    project_name = project_name.replace("-", "_") # для соответствия макросу
     return project_name
 
 # @brief get_project_version возвращает часть версии проекта
