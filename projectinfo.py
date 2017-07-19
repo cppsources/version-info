@@ -3,7 +3,7 @@
 
 import os
 
-# @brief get_project_name возвращает имя проекта (имя в верхнем регистре и соответствует макросу)
+# @brief get_project_name возвращает имя проекта в формате макроса
 # @desc в основе имя главного pro-файла проекта
 # @param pro_file_path путь к главному pro-файлу проекта
 def get_project_name(pro_file_path):
@@ -37,7 +37,7 @@ def get_project_version(version, param):
 # @brief get_project_build_info возвращает часть информации о сборке проекта
 # @param build_info информация о сборке проекта, заданная в виде строки:
 # {build_datetime}.{build_number}~{build_desc}
-# @param $${2} часть версии проекта, которую необходимо вернуть. Допустимые
+# @param param часть версии проекта, которую необходимо вернуть. Допустимые
 # значения: build_datetime, build_number, build_desc
 # @return в зависимости от param, если param не задано или не существует то
 # сообщение об ошибке
