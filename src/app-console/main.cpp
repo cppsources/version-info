@@ -4,6 +4,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
     qDebug() << "QCoreApplication: ";
     qDebug() << "PROJECT_NAME: " << PROJECT_NAME;
 
@@ -16,7 +17,7 @@ int main(int argc, char *argv[])
     qDebug() << "PROJECT_BUILD_NUMBER_BI: " << PROJECT_BUILD_NUMBER_BI;
     qDebug() << "PROJECT_BUILD_DESC: " << PROJECT_BUILD_DESC;
 
-#if PROJECT_NAME_IFDEF == VERSION_INFO
+#if PROJECT_NAME_IFDEF == PROJECT_VERSION
     qDebug() << 1;
 #else
     qDebug() << 2;

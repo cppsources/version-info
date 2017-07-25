@@ -1,4 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    app
+    app-console \
+    app-gui \
+    lib-shared \
+    lib-static
