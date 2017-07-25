@@ -48,7 +48,6 @@ defineReplace(getProjectVersion) {
 
         command = $$file_py | python
     }
-
     version = $$system($$command)
     return ($$version)
 }
