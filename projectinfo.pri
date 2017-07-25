@@ -19,8 +19,36 @@ defineReplace(getProjectName) {
 # то сообщение об ошибке
 defineReplace(getProjectVersion) {
     # TODO: Eсли $$2 не задано, то сообщение об ошибке
-    command = python -c \'import projectinfo; \
-    print projectinfo.get_project_version(\"$$1\", \"$$2\")\'
+
+    USE_EXTERNAL_PY_SCRIPT = FALSE
+
+    contains(USE_EXTERNAL_PY_SCRIPT, TRUE) {
+        command = python -c \'import projectinfo; \
+        print projectinfo.get_project_version(\"$$1\", \"$$2\")\'
+    }
+    contains(USE_EXTERNAL_PY_SCRIPT, FALSE) {
+        line_1 = "echo '\\043!/usr/bin/env python\\n\\n"
+        line_2  = "import os\\n\\n"
+        line_3  = "def get_project_version(version, param):\\n"
+        line_4  = "\\titems = version.split(\".\")\\n"
+        line_5  = "\\tif param == \"major\":\\n"
+        line_6  = "\\t\\treturn items[0]\\n"
+        line_7  = "\\telif param == \"minor\":\\n"
+        line_8  = "\\t\\treturn items[1]\\n"
+        line_9  = "\\telif param == \"patch\":\\n"
+        line_10  = "\\t\\treturn items[2]\\n"
+        line_11  = "\\telif param == \"build\":\\n"
+        line_12  = "\\t\\treturn items[3]\\n"
+        line_13  = "\\telse:\\n"
+        line_14  = "\\t\\tassert False\\n\\n"
+        line_15 = "print(get_project_version(\"$$1\", \"$$2\"))'"
+        file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6$$line_7
+        file_py += $$line_8$$line_9$$line_10$$line_11$$line_12$$line_13
+        file_py += $$line_14$$line_15
+
+        command = $$file_py | python
+    }
+
     version = $$system($$command)
     return ($$version)
 }
