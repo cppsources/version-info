@@ -17,17 +17,17 @@ message(PROJECT_BUILD_NUMBER_BI: $$project_build_number_bi)
 message(PROJECT_BUILD_DESC: $$project_build_desc)
 
 DEFINES += \
-    $$promotionValue(PROJECT_NAME, $$project_name, str) \
-    $$promotionValue(PROJECT_NAME_IFDEF, $$project_name, ifdef) \
+    $$promotion_value(PROJECT_NAME, $$project_name, str) \
+    $$promotion_value(PROJECT_NAME_IFDEF, $$project_name, ifdef) \
     \
-    $$promotionValue(PROJECT_MAJOR_VERSION, $$project_major_version, int) \
-    $$promotionValue(PROJECT_MINOR_VERSION, $$project_minor_version, int) \
-    $$promotionValue(PROJECT_PATCH_VERSION, $$project_patch_version, int) \
-    $$promotionValue(PROJECT_BUILD_NUMBER_VER, $$project_build_number_ver, int) \
+    $$promotion_value(PROJECT_MAJOR_VERSION, $$project_major_version, int) \
+    $$promotion_value(PROJECT_MINOR_VERSION, $$project_minor_version, int) \
+    $$promotion_value(PROJECT_PATCH_VERSION, $$project_patch_version, int) \
+    $$promotion_value(PROJECT_BUILD_NUMBER_VER, $$project_build_number_ver, int) \
     \
-    $$promotionValue(PROJECT_BUILD_DATETIME, $$project_build_datetime, str) \
-    $$promotionValue(PROJECT_BUILD_NUMBER_BI, $$project_build_number_bi, int) \
-    $$promotionValue(PROJECT_BUILD_DESC, $$project_build_desc, str)
+    $$promotion_value(PROJECT_BUILD_DATETIME, $$project_build_datetime, str) \
+    $$promotion_value(PROJECT_BUILD_NUMBER_BI, $$project_build_number_bi, int) \
+    $$promotion_value(PROJECT_BUILD_DESC, $$project_build_desc, str)
 
 TEMPLATE = app
 

@@ -1,27 +1,38 @@
-# @brief writeKeyValuePair запись пары "ключ-значение" в .qmake.cache
+# @brief write_key_value_pair запись пары "ключ-значение" в .qmake.cache
 # @param $$1 ключ
 # @param $$2 значение
-defineTest(writeKeyValuePair) {
+defineTest(write_key_value_pair) {
     system("echo $$1 = $$2 >> $$OUT_PWD/.qmake.cache")
 }
 
-# @brief promotionValue продвижка переменной в файлы исходного кода (*.h, *.c,
-# *.cpp) проекта
+# @brief promotion_value продвижка переменной в файлы исходного кода проекта
+# @desc файлы исходного кода (*.h, *.c, *.cpp)
 # @param $$1 продвигаемая переменная
 # @param $$2 значение продвигаемой переменной
 # @param $$3 режим продвижки. Допустимые значения ifdef, int, str
-defineReplace(promotionValue) {
+defineReplace(promotion_value) {
     arg_3 = $$3
 
     contains(arg_3, ifdef) {
-        promotionValue = $$2 $$1=$$2
+        promotion_value = $$2 $$1=$$2
     }
-     contains(arg_3, int) {
-        promotionValue = $$1=$$2
+    contains(arg_3, int) {
+        promotion_value = $$1=$$2
     }
     contains(arg_3, str) {
-        promotionValue = $$1=\\\"$$2\\\"
+        promotion_value = $$1=\\\"$$2\\\"
     }
 
-    return ($$promotionValue)
+    return ($$promotion_value)
+}
+
+# @brief recreate_qmake_cache пересоздание .qmake.cache если он уже существует
+defineTest(recreate_qmake_cache) {
+    exists($$OUT_PWD/.qmake.cache) {
+        unix: system(rm -rf $$OUT_PWD/.qmake.cache)
+        win32 { # TODO: Протестировать
+            QMAKE_CACHE_FILENAME = $$OUT_PWD/.qmake.cache
+            system(DEL /Q /F $$replace(QMAKE_CACHE_FILENAME, /, \\))
+        }
+    }
 }
