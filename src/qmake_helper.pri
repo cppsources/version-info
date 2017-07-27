@@ -11,16 +11,11 @@ defineTest(write_key_value) {
 # @param $$2 значение продвигаемой переменной
 # @param $$3 режим продвижки (IFDEF, INT или STR)
 defineReplace(promotion_value) {
-    PROMOTION_MODE = $$3
-    equals(PROMOTION_MODE, IFDEF) {
-        return ($$2 $$1=$$2)
-    }
-    equals(PROMOTION_MODE, INT) {
-        return ($$1=$$2)
-    }
-    equals(PROMOTION_MODE, STR) {
-        return ($$1=\\\"$$2\\\")
-    }
+    ARG_3 = $$3
+    equals(ARG_3, IFDEF): return ($$2 $$1=$$2)
+    equals(ARG_3, INT): return ($$1=$$2)
+    equals(ARG_3, STR): return ($$1=\\\"$$2\\\")
+
     show_msg(in func \"promotion_value\" arg $$3 not found, ERROR, $$_FILE_)
 }
 
@@ -43,10 +38,6 @@ defineTest(show_msg) {
     MSG_MODE = $$2
     CURRENT_FILE = $$3
 
-    equals(MSG_MODE, WARNING) {
-        warning($$1 ($$basename(CURRENT_FILE)))
-    }
-    equals(MSG_MODE, ERROR) {
-        error($$1 ($$basename(CURRENT_FILE)))
-    }
+    equals(MSG_MODE, WARNING): warning($$1 ($$basename(CURRENT_FILE)))
+    equals(MSG_MODE, ERROR): error($$1 ($$basename(CURRENT_FILE)))
 }
