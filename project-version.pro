@@ -1,5 +1,5 @@
-include(projectinfo.pri)
-include(qmake_helper.pri)
+include(src/projectinfo.pri)
+include(src/qmake_helper.pri)
 
 recreate_qmake_cache()
 
@@ -15,5 +15,5 @@ write_project_name()
 write_project_version($$VERSION)
 write_project_build_info($$BUILD_INFO)
 
-OTHER_FILES += \
-    projectinfo.py
+#OTHER_FILES += \
+#    doc/projectinfo.py
