@@ -1,7 +1,6 @@
 win32 { # HACK
     CURRENT_FILE = $$_FILE_
-    CURRENT_FILE_NAME = $$basename(CURRENT_FILE)
-    error(ERROR: platform windows not supported in $$CURRENT_FILE_NAME)
+    error(ERROR: platform windows not supported in $$basename(CURRENT_FILE))
 }
 
 # @brief is_python_installed проверка, что установлен Python указанной версии
