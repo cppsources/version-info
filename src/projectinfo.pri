@@ -26,7 +26,7 @@ defineReplace(get_project_name) {
         file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6$$line_7
         file_py = $$file_py$$line_8$$line_9
 
-        command = echo \'$$file_py\' | python
+        command = printf \'$$file_py\' | python
     }
     project_name = $$system($$command)
     return ($$project_name)
@@ -66,7 +66,7 @@ defineReplace(get_project_version) {
         file_py = $$file_py$$line_7$$line_8$$line_9$$line_10$$line_11
         file_py = $$file_py$$line_12$$line_13$$line_14
 
-        command = echo \'$$file_py\' | python
+        command = printf \'$$file_py\' | python
     }
     version = $$system($$command)
     return ($$version)
@@ -101,7 +101,7 @@ defineReplace(get_project_build_info) {
         file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6$$line_7
         file_py = $$file_py$$line_8$$line_9
 
-        command = echo \'$$file_py\' | python
+        command = printf \'$$file_py\' | python
     }
     project_build_info = $$system($$command)
     return ($$project_build_info)
