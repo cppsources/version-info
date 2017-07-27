@@ -20,7 +20,7 @@ defineReplace(get_project_name) {
         line_5  = "\\tproject_name = os.path.splitext(basename)[0]\\n"
         line_6  = "\\tproject_name = project_name.upper()\\n"
         line_7  = "\\tproject_name = project_name.replace(\"-\", \"_\")\\n"
-        line_8  = "\\treturn project_name\\n"
+        line_8  = "\\treturn project_name\\n\\n"
         line_9  = "print(get_project_name(\"$$1\"))"
 
         file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6$$line_7
@@ -95,7 +95,7 @@ defineReplace(get_project_build_info) {
         line_5 = "\\telif param == \"build_number\":\\n"
         line_6 = "\\t\\treturn build_info.split(\".\")[1].split(\"~\")[0]\\n"
         line_7 = "\\telif param == \"build_desc\":\\n"
-        line_8 = "\\t\\treturn build_info.split(\".\")[1].split(\"~\")[1]\\n"
+        line_8 = "\\t\\treturn build_info.split(\".\")[1].split(\"~\")[1]\\n\\n"
         line_9 = "print(get_project_build_info(\"$$1\", \"$$2\"))"
 
         file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6$$line_7
@@ -118,19 +118,19 @@ defineTest(write_project_info) {
     ARG_3 = $$3
 
     !isEmpty(ARG_1) {
-        write_key_value(PROJECT_NAME, $$get_project_name($$1))
+        write_key_value(PROJECT_NAME, $$get_project_name($$ARG_1))
     }
 
     !isEmpty(ARG_2) {
-        write_key_value(PROJECT_MAJOR_VERSION, $$get_project_version($$2, major))
-        write_key_value(PROJECT_MINOR_VERSION, $$get_project_version($$2, minor))
-        write_key_value(PROJECT_PATCH_VERSION, $$get_project_version($$2, patch))
-        write_key_value(PROJECT_BUILD_NUMBER_VER, $$get_project_version($$2, build))
+        write_key_value(PROJECT_MAJOR_VERSION, $$get_project_version($$ARG_2, major))
+        write_key_value(PROJECT_MINOR_VERSION, $$get_project_version($$ARG_2, minor))
+        write_key_value(PROJECT_PATCH_VERSION, $$get_project_version($$ARG_2, patch))
+        write_key_value(PROJECT_BUILD_NUMBER_VER, $$get_project_version($$ARG_2, build))
     }
 
     !isEmpty(ARG_3) {
-        write_key_value(PROJECT_BUILD_DATETIME, $$get_project_build_info($$3, build_datetime))
-        write_key_value(PROJECT_BUILD_NUMBER_BI, $$get_project_build_info($$3, build_number))
-        write_key_value(PROJECT_BUILD_DESC, $$get_project_build_info($$3, build_desc))
+        write_key_value(PROJECT_BUILD_DATETIME, $$get_project_build_info($$ARG_3, build_datetime))
+        write_key_value(PROJECT_BUILD_NUMBER_BI, $$get_project_build_info($$ARG_3, build_number))
+        write_key_value(PROJECT_BUILD_DESC, $$get_project_build_info($$ARG_3, build_desc))
     }
 }
