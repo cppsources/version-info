@@ -4,8 +4,8 @@ include(qmake_helper.pri)
 win32: show_msg(platform windows not supported, ERROR, $$_FILE_) # HACK
 
 # @brief get_project_name возвращает имя проекта в формате макроса,
-# т. е. в верхнем регистре и "-" заменено на "_"
-# @desc имя проекта формируется на основе имени главного pro-файла проекта
+# т. е. в верхнем регистре и "-" (если есть) заменено на "_"
+# @param $$1 имя главного pro-файла проекта
 defineReplace(get_project_name) {
     USE_PROJECTINFO_PY = FALSE
 
@@ -15,13 +15,13 @@ defineReplace(get_project_name) {
     } else {
         line_1  = "\\043!/usr/bin/env python\\n\\n"
         line_2  = "import os\\n\\n"
-        line_3  = "def get_project_name(pro_file_path):\\n"
-        line_4  = "\\tbasename = os.path.basename(pro_file_path)\\n"
+        line_3  = "def get_project_name(pro_file_name):\\n"
+        line_4  = "\\tbasename = os.path.basename(pro_file_name)\\n"
         line_5  = "\\tproject_name = os.path.splitext(basename)[0]\\n"
         line_6  = "\\tproject_name = project_name.upper()\\n"
         line_7  = "\\tproject_name = project_name.replace(\"-\", \"_\")\\n"
         line_8  = "\\treturn project_name\\n"
-        line_9  = "print(get_project_name(\"$$_PRO_FILE_\"))"
+        line_9  = "print(get_project_name(\"$$1\"))"
 
         file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6$$line_7
         file_py = $$file_py$$line_8$$line_9
@@ -72,15 +72,6 @@ defineReplace(get_project_version) {
     return ($$version)
 }
 
-# @brief write_project_version запись версии проекта в .qmake.cache
-# @param $$1 версия проекта, в формате: $$MAJOR.$$MINOR.$$PATCH.$$BUILD
-defineTest(write_project_version) {
-    write_key_value(project_major_version, $$get_project_version($$1, major))
-    write_key_value(project_minor_version, $$get_project_version($$1, minor))
-    write_key_value(project_patch_version, $$get_project_version($$1, patch))
-    write_key_value(project_build_number_ver, $$get_project_version($$1, build))
-}
-
 # @brief get_project_build_info возвращает часть информации о сборке проекта
 # @param $$1 информация о сборке проекта, в формате:
 # $$BUILD_DATETIME.$$BUILD_NUMBER~$$DESC
@@ -116,20 +107,30 @@ defineReplace(get_project_build_info) {
     return ($$project_build_info)
 }
 
-# @brief write_project_build_info запись информации о сборке проекта в .qmake.cache
-# @param $$1 информация о сборке проекта, в формате:
+# @brief write_project_info запись информации о проекте в .qmake.cache
+# @param $$1 имя главного pro-файла проекта
+# @param $$2 версия проекта, в формате: $$MAJOR.$$MINOR.$$PATCH.$$BUILD
+# @param $$3 информация о сборке проекта, в формате:
 # $$BUILD_DATETIME.$$BUILD_NUMBER~$$DESC
-defineTest(write_project_build_info) {
-    write_key_value(project_build_datetime, $$get_project_build_info($$1, build_datetime))
-    write_key_value(project_build_number_bi, $$get_project_build_info($$1, build_number))
-    write_key_value(project_build_desc, $$get_project_build_info($$1, build_desc))
-}
-
-defineTest(write_project_name) {
-    write_key_value(project_name, $$get_project_name())
-}
-
-
 defineTest(write_project_info) {
+    ARG_1 = $$1
+    ARG_2 = $$2
+    ARG_3 = $$3
 
+    !isEmpty(ARG_1) {
+        write_key_value(project_name, $$get_project_name($$1))
+    }
+
+    !isEmpty(ARG_2) {
+        write_key_value(project_major_version, $$get_project_version($$2, major))
+        write_key_value(project_minor_version, $$get_project_version($$2, minor))
+        write_key_value(project_patch_version, $$get_project_version($$2, patch))
+        write_key_value(project_build_number_ver, $$get_project_version($$2, build))
+    }
+
+    !isEmpty(ARG_3) {
+        write_key_value(project_build_datetime, $$get_project_build_info($$3, build_datetime))
+        write_key_value(project_build_number_bi, $$get_project_build_info($$3, build_number))
+        write_key_value(project_build_desc, $$get_project_build_info($$3, build_desc))
+    }
 }
