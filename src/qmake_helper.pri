@@ -1,3 +1,9 @@
+win32 { # HACK
+    CURRENT_FILE = $$_FILE_
+    CURRENT_FILE_NAME = $$basename(CURRENT_FILE)
+    error(ERROR: platform windows not supported in $$CURRENT_FILE_NAME)
+}
+
 # @brief write_key_value запись ключа и его значения в .qmake.cache
 # @param $$1 ключ
 # @param $$2 значение
