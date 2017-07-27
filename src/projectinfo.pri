@@ -1,17 +1,15 @@
-win32 { # HACK
-    CURRENT_FILE = $$_FILE_
-    error(ERROR: platform windows not supported in $$basename(CURRENT_FILE))
-}
-
 include(python_helper.pri)
 include(qmake_helper.pri)
 
-# @brief get_project_name возвращает имя проекта (имя в верхнем регистре и соответствует макросу)
-# @desc в основе имя главного pro-файла проекта, используется в *.pro и *.pri
-defineReplace(get_project_name) {
-    USE_EXTERNAL_PY_SCRIPT = FALSE
+win32: show_msg(platform windows not supported, ERROR, $$_FILE_) # HACK
 
-    equals(USE_EXTERNAL_PY_SCRIPT, TRUE) {
+# @brief get_project_name возвращает имя проекта в формате макроса,
+# т. е. в верхнем регистре и "-" заменено на "_"
+# @desc имя проекта формируется на основе имени главного pro-файла проекта
+defineReplace(get_project_name) {
+    USE_PROJECTINFO_PY = FALSE
+
+    equals(USE_PROJECTINFO_PY, TRUE) {
         command = python -c \'import projectinfo; \
         print projectinfo.get_project_name(\"$$_PRO_FILE_\")\'
     } else {
@@ -35,8 +33,7 @@ defineReplace(get_project_name) {
 }
 
 # @brief get_project_version возвращает часть версии проекта
-# @param $$1 версия проекта, заданная в виде строки:
-# $$MAJOR.$$MINOR.$$PATCH.$$BUILD
+# @param $$1 версия проекта, в формате: $$MAJOR.$$MINOR.$$PATCH.$$BUILD
 # @param $$2 часть версии проекта, которую необходимо вернуть. Допустимые
 # значения: major, minor, patch, build
 # @return в зависимости от $$2, если $$2 не задано или не существует,
@@ -44,9 +41,9 @@ defineReplace(get_project_name) {
 defineReplace(get_project_version) {
     # TODO: Eсли $$2 не задано, то сообщение об ошибке
 
-    USE_EXTERNAL_PY_SCRIPT = FALSE
+    USE_PROJECTINFO_PY = FALSE
 
-    equals(USE_EXTERNAL_PY_SCRIPT, TRUE) {
+    equals(USE_PROJECTINFO_PY, TRUE) {
         command = python -c \'import projectinfo; \
         print projectinfo.get_project_version(\"$$1\", \"$$2\")\'
     } else {
@@ -76,8 +73,7 @@ defineReplace(get_project_version) {
 }
 
 # @brief write_project_version запись версии проекта в .qmake.cache
-# @param $$1 версия проекта, заданная в виде строки:
-# $$MAJOR.$$MINOR.$$PATCH.$$BUILD
+# @param $$1 версия проекта, в формате: $$MAJOR.$$MINOR.$$PATCH.$$BUILD
 defineTest(write_project_version) {
     write_key_value(project_major_version, $$get_project_version($$1, major))
     write_key_value(project_minor_version, $$get_project_version($$1, minor))
@@ -86,7 +82,7 @@ defineTest(write_project_version) {
 }
 
 # @brief get_project_build_info возвращает часть информации о сборке проекта
-# @param $$1 информация о сборке проекта, заданная в виде строки:
+# @param $$1 информация о сборке проекта, в формате:
 # $$BUILD_DATETIME.$$BUILD_NUMBER~$$DESC
 # @param $$2 часть версии проекта, которую необходимо вернуть. Допустимые
 # значения: build_datetime, build_number, build_desc
@@ -95,9 +91,9 @@ defineTest(write_project_version) {
 defineReplace(get_project_build_info) {
     # TODO: $$2 если пусто то error
 
-    USE_EXTERNAL_PY_SCRIPT = FALSE
+    USE_PROJECTINFO_PY = FALSE
 
-    equals(USE_EXTERNAL_PY_SCRIPT, TRUE) {
+    equals(USE_PROJECTINFO_PY, TRUE) {
         command = python -c \'import projectinfo; \
         print projectinfo.get_project_build_info(\"$$1\", \"$$2\")\'
     } else {
@@ -121,7 +117,7 @@ defineReplace(get_project_build_info) {
 }
 
 # @brief write_project_build_info запись информации о сборке проекта в .qmake.cache
-# @param $$1 информация о сборке проекта, заданная в виде строки:
+# @param $$1 информация о сборке проекта, в формате:
 # $$BUILD_DATETIME.$$BUILD_NUMBER~$$DESC
 defineTest(write_project_build_info) {
     write_key_value(project_build_datetime, $$get_project_build_info($$1, build_datetime))
@@ -131,4 +127,9 @@ defineTest(write_project_build_info) {
 
 defineTest(write_project_name) {
     write_key_value(project_name, $$get_project_name())
+}
+
+
+defineTest(write_project_info) {
+
 }

@@ -1,7 +1,6 @@
-win32 { # HACK
-    CURRENT_FILE = $$_FILE_
-    error(ERROR: platform windows not supported in $$basename(CURRENT_FILE))
-}
+include(qmake_helper.pri)
+
+win32: show_msg(platform windows not supported, ERROR, $$_FILE_) # HACK
 
 # @brief is_python_installed проверка, что установлен Python указанной версии
 # @param $$1 номер версии
@@ -11,7 +10,7 @@ defineTest(is_python_installed) {
 #    win32: command = python --version 1>nul 2>nul && echo %errorlevel%
     return_code = $$system($$command)
     !equals(return_code, 0) {
-        error(error: python $$1 is not installed)
+        show_msg(python $$1 is not installed, ERROR)
     }
 }
 
