@@ -11,7 +11,7 @@ SUBDIRS += \
 VERSION = 1.2.3.4
 BUILD_INFO = 2017-07-11_11:50:48.2~gi2
 
-write_project_info(,, $$BUILD_INFO)
+write_project_info($$_PRO_FILE_, $$VERSION, $$BUILD_INFO)
 
 #OTHER_FILES += \
 #    doc/projectinfo.py

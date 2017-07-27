@@ -118,19 +118,19 @@ defineTest(write_project_info) {
     ARG_3 = $$3
 
     !isEmpty(ARG_1) {
-        write_key_value(project_name, $$get_project_name($$1))
+        write_key_value(PROJECT_NAME, $$get_project_name($$1))
     }
 
     !isEmpty(ARG_2) {
-        write_key_value(project_major_version, $$get_project_version($$2, major))
-        write_key_value(project_minor_version, $$get_project_version($$2, minor))
-        write_key_value(project_patch_version, $$get_project_version($$2, patch))
-        write_key_value(project_build_number_ver, $$get_project_version($$2, build))
+        write_key_value(PROJECT_MAJOR_VERSION, $$get_project_version($$2, major))
+        write_key_value(PROJECT_MINOR_VERSION, $$get_project_version($$2, minor))
+        write_key_value(PROJECT_PATCH_VERSION, $$get_project_version($$2, patch))
+        write_key_value(PROJECT_BUILD_NUMBER_VER, $$get_project_version($$2, build))
     }
 
     !isEmpty(ARG_3) {
-        write_key_value(project_build_datetime, $$get_project_build_info($$3, build_datetime))
-        write_key_value(project_build_number_bi, $$get_project_build_info($$3, build_number))
-        write_key_value(project_build_desc, $$get_project_build_info($$3, build_desc))
+        write_key_value(PROJECT_BUILD_DATETIME, $$get_project_build_info($$3, build_datetime))
+        write_key_value(PROJECT_BUILD_NUMBER_BI, $$get_project_build_info($$3, build_number))
+        write_key_value(PROJECT_BUILD_DESC, $$get_project_build_info($$3, build_desc))
     }
 }
