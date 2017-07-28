@@ -32,7 +32,7 @@ defineTest(recreate_qmake_cache) {
 # @brief show_msg вывод сообщения указанного типа
 # @param $$1 текст сообщения
 # @param $$2 тип сообщения (WARNING или ERROR)
-# @param $$3 qmake-переменная, передающая имя файла, из которого вызвана
+# @param $$3 qmake-переменная, содержащая имя файла, из которого вызвана
 # функция show_msg
 defineTest(show_msg) {
     MSG_MODE = $$2
