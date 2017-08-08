@@ -1,136 +1,144 @@
 include(python_helper.pri)
 include(qmake_helper.pri)
 
-win32: show_msg(platform windows not supported, ERROR, $$_FILE_) # HACK
+win32: error(platform windows not supported ($$basename(_FILE_))) # HACK
 
-# @brief get_project_name возвращает имя проекта в формате макроса,
+!is_python_supported_version_installed(2.4.3, 2.7.9): error(unsupported)
+
+# @brief parse_project_name выделяет имя проекта и возвращает в формате макроса,
 # т. е. в верхнем регистре и "-" (если есть) заменено на "_"
 # @param $$1 имя главного pro-файла проекта
-defineReplace(get_project_name) {
-    USE_PROJECTINFO_PY = FALSE
+defineReplace(parse_project_name) {
+    USE_PROJECTINFO_PY = false
 
-    equals(USE_PROJECTINFO_PY, TRUE) {
-        command = python -c \'import projectinfo; \
-        print projectinfo.get_project_name(\"$$_PRO_FILE_\")\'
+    USE_PROJECTINFO_PY {
+        COMMAND = python -c \'import projectinfo; \
+            print projectinfo.parse_project_name(\"$$1\")\'
     } else {
-        line_1  = "\\043!/usr/bin/env python\\n\\n"
-        line_2  = "import os\\n\\n"
-        line_3  = "def get_project_name(pro_file_name):\\n"
-        line_4  = "\\tbasename = os.path.basename(pro_file_name)\\n"
-        line_5  = "\\tproject_name = os.path.splitext(basename)[0]\\n"
-        line_6  = "\\tproject_name = project_name.upper()\\n"
-        line_7  = "\\tproject_name = project_name.replace(\"-\", \"_\")\\n"
-        line_8  = "\\treturn project_name\\n\\n"
-        line_9  = "print(get_project_name(\"$$1\"))"
+        SCRIPT_PY = $$join_strings( \
+            "\\043!/usr/bin/env python\\n\\n" \
+            "import os\\n\\n" \
+            "def parse_project_name(pro_file_name):\\n" \
+            "\\tbasename = os.path.basename(pro_file_name)\\n" \
+            "\\tproject_name = os.path.splitext(basename)[0]\\n" \
+            "\\tproject_name = project_name.upper()\\n" \
+            "\\tproject_name = project_name.replace(\"-\", \"_\")\\n" \
+            "\\treturn project_name\\n\\n" \
+            "print(parse_project_name(\"$$1\"))")
 
-        file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6$$line_7
-        file_py = $$file_py$$line_8$$line_9
-
-        command = printf \'$$file_py\' | python
+        COMMAND = printf \'$$SCRIPT_PY\' | python
     }
-    project_name = $$system($$command)
-    return ($$project_name)
+    PROJECT_NAME = $$system($$COMMAND)
+    return ($$PROJECT_NAME)
 }
 
-# @brief get_project_version возвращает часть версии проекта
+# @brief parse_project_version выделяет и возвращает указанную часть версии
+# проекта
 # @param $$1 версия проекта, в формате: $$MAJOR.$$MINOR.$$PATCH.$$BUILD
 # @param $$2 часть версии проекта, которую необходимо вернуть. Допустимые
 # значения: major, minor, patch, build
 # @return в зависимости от $$2, если $$2 не задано или не существует,
 # то сообщение об ошибке
-defineReplace(get_project_version) {
+defineReplace(parse_project_version) {
     # TODO: Eсли $$2 не задано, то сообщение об ошибке
 
-    USE_PROJECTINFO_PY = FALSE
+    USE_PROJECTINFO_PY = false
 
-    equals(USE_PROJECTINFO_PY, TRUE) {
-        command = python -c \'import projectinfo; \
-        print projectinfo.get_project_version(\"$$1\", \"$$2\")\'
+    USE_PROJECTINFO_PY {
+        COMMAND = python -c \'import projectinfo; \
+        print projectinfo.parse_project_version(\"$$1\", \"$$2\")\'
     } else {
-        line_1  = "\\043!/usr/bin/env python\\n\\n"
-        line_2  = "def get_project_version(version, param):\\n"
-        line_3  = "\\titems = version.split(\".\")\\n"
-        line_4  = "\\tif param == \"major\":\\n"
-        line_5  = "\\t\\treturn items[0]\\n"
-        line_6  = "\\telif param == \"minor\":\\n"
-        line_7  = "\\t\\treturn items[1]\\n"
-        line_8  = "\\telif param == \"patch\":\\n"
-        line_9  = "\\t\\treturn items[2]\\n"
-        line_10 = "\\telif param == \"build\":\\n"
-        line_11 = "\\t\\treturn items[3]\\n"
-        line_12 = "\\telse:\\n"
-        line_13 = "\\t\\tassert False\\n\\n"
-        line_14 = "print(get_project_version(\"$$1\", \"$$2\"))"
+        SCRIPT_PY = $$join_strings( \
+            "\\043!/usr/bin/env python\\n\\n" \
+            "def parse_project_version(version, param):\\n" \
+            "\\titems = version.split(\".\")\\n" \
+            "\\tif param.lower() == \"major\":\\n" \
+            "\\t\\treturn items[0]\\n" \
+            "\\telif param.lower() == \"minor\":\\n" \
+            "\\t\\treturn items[1]\\n" \
+            "\\telif param.lower() == \"patch\":\\n" \
+            "\\t\\treturn items[2]\\n" \
+            "\\telif param.lower() == \"build\":\\n" \
+            "\\t\\treturn items[3]\\n" \
+            "\\telse:\\n" \
+            "\\t\\tassert False\\n\\n" \
+            "print(parse_project_version(\"$$1\", \"$$2\"))")
 
-        file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6
-        file_py = $$file_py$$line_7$$line_8$$line_9$$line_10$$line_11
-        file_py = $$file_py$$line_12$$line_13$$line_14
-
-        command = printf \'$$file_py\' | python
+        COMMAND = printf \'$$SCRIPT_PY\' | python
     }
-    version = $$system($$command)
-    return ($$version)
+    PROJECT_VERSION = $$system($$COMMAND)
+    return ($$PROJECT_VERSION)
 }
 
-# @brief get_project_build_info возвращает часть информации о сборке проекта
+# @brief parse_project_build_info выделяет и возвращает указанную часть
+# информации о сборке проекта
 # @param $$1 информация о сборке проекта, в формате:
 # $$BUILD_DATETIME.$$BUILD_NUMBER~$$DESC
 # @param $$2 часть версии проекта, которую необходимо вернуть. Допустимые
 # значения: build_datetime, build_number, build_desc
 # @return в зависимости от $$2, если $$2 не задано или не существует,
 # то сообщение об ошибке
-defineReplace(get_project_build_info) {
+defineReplace(parse_project_build_info) {
     # TODO: $$2 если пусто то error
 
-    USE_PROJECTINFO_PY = FALSE
+    USE_PROJECTINFO_PY = false
 
-    equals(USE_PROJECTINFO_PY, TRUE) {
-        command = python -c \'import projectinfo; \
-        print projectinfo.get_project_build_info(\"$$1\", \"$$2\")\'
+    USE_PROJECTINFO_PY {
+        COMMAND = python -c \'import projectinfo; \
+        print projectinfo.parse_project_build_info(\"$$1\", \"$$2\")\'
     } else {
-        line_1 = "\\043!/usr/bin/env python\\n\\n"
-        line_2 = "def get_project_build_info(build_info, param):\\n"
-        line_3 = "\\tif param == \"build_datetime\":\\n"
-        line_4 = "\\t\\treturn build_info.split(\".\")[0]\\n"
-        line_5 = "\\telif param == \"build_number\":\\n"
-        line_6 = "\\t\\treturn build_info.split(\".\")[1].split(\"~\")[0]\\n"
-        line_7 = "\\telif param == \"build_desc\":\\n"
-        line_8 = "\\t\\treturn build_info.split(\".\")[1].split(\"~\")[1]\\n\\n"
-        line_9 = "print(get_project_build_info(\"$$1\", \"$$2\"))"
+        SCRIPT_PY = $$join_strings( \
+            "\\043!/usr/bin/env python\\n\\n" \
+            "def parse_project_build_info(build_info, param):\\n" \
+            "\\tif param.lower() == \"build_datetime\":\\n" \
+            "\\t\\treturn build_info.split(\".\")[0]\\n" \
+            "\\telif param.lower() == \"build_number\":\\n" \
+            "\\t\\treturn build_info.split(\".\")[1].split(\"~\")[0]\\n" \
+            "\\telif param.lower() == \"build_desc\":\\n" \
+            "\\t\\treturn build_info.split(\".\")[1].split(\"~\")[1]\\n\\n" \
+            "print(parse_project_build_info(\"$$1\", \"$$2\"))")
 
-        file_py = $$line_1$$line_2$$line_3$$line_4$$line_5$$line_6$$line_7
-        file_py = $$file_py$$line_8$$line_9
-
-        command = printf \'$$file_py\' | python
+        COMMAND = printf \'$$SCRIPT_PY\' | python
     }
-    project_build_info = $$system($$command)
-    return ($$project_build_info)
+    PROJECT_BUILD_INFO = $$system($$COMMAND)
+    return ($$PROJECT_BUILD_INFO)
 }
 
 # @brief write_project_info запись информации о проекте в .qmake.cache
-# @param $$1 имя главного pro-файла проекта
-# @param $$2 версия проекта, в формате: $$MAJOR.$$MINOR.$$PATCH.$$BUILD
-# @param $$3 информация о сборке проекта, в формате:
-# $$BUILD_DATETIME.$$BUILD_NUMBER~$$DESC
+# @param PROJECT_NAME имя главного pro-файла проекта
+# @param PROJECT_VERSION версия проекта, в формате: MAJOR.MINOR.PATCH.BUILD
+# @param PROJECT_BUILD_INFO информация о сборке проекта, в формате:
+# BUILD_DATETIME.BUILD_NUMBER~DESC
 defineTest(write_project_info) {
-    ARG_1 = $$1
-    ARG_2 = $$2
-    ARG_3 = $$3
+    PROJECT_NAME = $$1
+    PROJECT_VERSION = $$2
+    PROJECT_BUILD_INFO = $$3
 
-    !isEmpty(ARG_1) {
-        write_key_value(PROJECT_NAME, $$get_project_name($$ARG_1))
+    !isEmpty(PROJECT_NAME) {
+        write_key_value(PROJECT_NAME, $$parse_project_name($$PROJECT_NAME))
     }
 
-    !isEmpty(ARG_2) {
-        write_key_value(PROJECT_MAJOR_VERSION, $$get_project_version($$ARG_2, major))
-        write_key_value(PROJECT_MINOR_VERSION, $$get_project_version($$ARG_2, minor))
-        write_key_value(PROJECT_PATCH_VERSION, $$get_project_version($$ARG_2, patch))
-        write_key_value(PROJECT_BUILD_NUMBER_VER, $$get_project_version($$ARG_2, build))
+    !isEmpty(PROJECT_VERSION) {
+        write_key_value(PROJECT_MAJOR_VERSION, \
+            $$parse_project_version($$PROJECT_VERSION, MAJOR))
+        write_key_value(PROJECT_MINOR_VERSION, \
+            $$parse_project_version($$PROJECT_VERSION, MINOR))
+        write_key_value(PROJECT_PATCH_VERSION, \
+            $$parse_project_version($$PROJECT_VERSION, PATCH))
+        !infile($$PROJECT_BUILD_DIR/.qmake.cache, PROJECT_BUILD_NUMBER) {
+            write_key_value(PROJECT_BUILD_NUMBER, \
+                $$parse_project_version($$PROJECT_VERSION, BUILD))
+        }
     }
 
-    !isEmpty(ARG_3) {
-        write_key_value(PROJECT_BUILD_DATETIME, $$get_project_build_info($$ARG_3, build_datetime))
-        write_key_value(PROJECT_BUILD_NUMBER_BI, $$get_project_build_info($$ARG_3, build_number))
-        write_key_value(PROJECT_BUILD_DESC, $$get_project_build_info($$ARG_3, build_desc))
+    !isEmpty(PROJECT_BUILD_INFO) {
+        write_key_value(PROJECT_BUILD_DATETIME, \
+            $$parse_project_build_info($$PROJECT_BUILD_INFO, BUILD_DATETIME))
+        !infile($$PROJECT_BUILD_DIR/.qmake.cache, PROJECT_BUILD_NUMBER) {
+            write_key_value(PROJECT_BUILD_NUMBER, \
+                $$parse_project_build_info($$PROJECT_BUILD_INFO, BUILD_NUMBER))
+        }
+        write_key_value(PROJECT_BUILD_DESC, \
+            $$parse_project_build_info($$PROJECT_BUILD_INFO, BUILD_DESC))
     }
 }

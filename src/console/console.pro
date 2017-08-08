@@ -1,0 +1,36 @@
+include(./../environment.pri)
+include(./../projectinfo.pri)
+include(./../qmake_helper.pri)
+
+QT += core
+
+CONFIG += console
+
+message(APP.PRO:)
+message(PROJECT_NAME: $$PROJECT_NAME)
+
+message(PROJECT_MAJOR_VERSION: $$PROJECT_MAJOR_VERSION)
+message(PROJECT_MINOR_VERSION: $$PROJECT_MINOR_VERSION)
+message(PROJECT_PATCH_VERSION: $$PROJECT_PATCH_VERSION)
+
+message(PROJECT_BUILD_DATETIME: $$PROJECT_BUILD_DATETIME)
+message(PROJECT_BUILD_NUMBER: $$PROJECT_BUILD_NUMBER)
+message(PROJECT_BUILD_DESC: $$PROJECT_BUILD_DESC)
+
+DEFINES += \
+    $$promotion_macro(PROJECT_NAME, $$PROJECT_NAME, STRING) \
+    $$promotion_macro(PROJECT_NAME_CONDITION, $$PROJECT_NAME, CONDITION) \
+    \
+#    $$promotion_macro(PROJECT_MAJOR_VERSION, $$PROJECT_MAJOR_VERSION, NUMBER) \
+#    $$promotion_macro(PROJECT_MINOR_VERSION, $$PROJECT_MINOR_VERSION, NUMBER) \
+#    $$promotion_macro(PROJECT_PATCH_VERSION, $$PROJECT_PATCH_VERSION, NUMBER) \
+    \
+    $$promotion_macro(PROJECT_BUILD_NUMBER, $$PROJECT_BUILD_NUMBER, NUMBER) \
+    \
+    $$promotion_macro(PROJECT_BUILD_DATETIME, $$PROJECT_BUILD_DATETIME, STRING) \
+    $$promotion_macro(PROJECT_BUILD_DESC, $$PROJECT_BUILD_DESC, STRING)
+
+TEMPLATE = app
+
+SOURCES += \
+    main.cpp

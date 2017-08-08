@@ -1,7 +1,9 @@
 TEMPLATE = subdirs
 
+CONFIG += ordered
+
 SUBDIRS += \
-    app-console \
-    app-gui \
-    lib-shared \
-    lib-static
+    console \
+    gui \
+    shared \
+    static

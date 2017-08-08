@@ -3,24 +3,24 @@
 
 import os
 
-# @brief get_project_name возвращает имя проекта в формате макроса
+# @brief parse_project_name возвращает имя проекта в формате макроса
 # @desc в основе имя главного pro-файла проекта
 # @param pro_file_name путь к главному pro-файлу проекта
-def get_project_name(pro_file_name):
+def parse_project_name(pro_file_name):
     basename = os.path.basename(pro_file_name)
     project_name = os.path.splitext(basename)[0]
     project_name = project_name.upper()
     project_name = project_name.replace("-", "_") # для соответствия макросу
     return project_name
 
-# @brief get_project_version возвращает часть версии проекта
+# @brief parse_project_version возвращает часть версии проекта
 # @param version версия проекта, заданная в виде строки:
 # {major}.{minor}.{patch}.{build}
 # @param param часть версии проекта, которую необходимо вернуть. Допустимые
 # значения: major, minor, patch, build
 # @return в зависимости от param, если param не задано или не существует, то
 # сообщение об ошибке
-def get_project_version(version, param):
+def parse_project_version(version, param):
     items = version.split(".")
 
     if param == "major":
@@ -34,14 +34,14 @@ def get_project_version(version, param):
     else: # если несуществующий аргумент
         assert False # TODO: реализовать обработку ошибки
 
-# @brief get_project_build_info возвращает часть информации о сборке проекта
+# @brief parse_project_build_info возвращает часть информации о сборке проекта
 # @param build_info информация о сборке проекта, заданная в виде строки:
 # {build_datetime}.{build_number}~{build_desc}
 # @param param часть версии проекта, которую необходимо вернуть. Допустимые
 # значения: build_datetime, build_number, build_desc
 # @return в зависимости от param, если param не задано или не существует то
 # сообщение об ошибке
-def get_project_build_info(build_info, param):
+def parse_project_build_info(build_info, param):
 
     if param == "build_datetime":
         return build_info.split(".")[0]
