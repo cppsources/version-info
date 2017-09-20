@@ -16,6 +16,8 @@ defineTest(write_key_value) {
     !count(ARGS, 2): error(qmake: too few or to many arguments in the \
         function \'write_key_value(key, value)\')
 
+    message(PROJECT_BUILD_DIR: $$PROJECT_BUILD_DIR)
+
     system("echo $$KEY = $$VALUE >> $$PROJECT_BUILD_DIR/.qmake.cache")
 }
 
@@ -51,7 +53,7 @@ defineTest(init_qmake_cache) {
     PROJECT_DIR = $$1
     PROJECT_BUILD_DIR = $$2
 
-    export(PROJECT_BUILD_DIR)
+#    export(PROJECT_BUILD_DIR)
 
     QMAKE_CACHE_FILENAME = $$PROJECT_BUILD_DIR/.qmake.cache
     exists($$QMAKE_CACHE_FILENAME) {

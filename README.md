@@ -1,11 +1,11 @@
 # project-version [en]
 
-Storage and modification project's version info,
-console (gui) applications, shared and static libraries
+Storage, modification and !VIEW! info, about project's version
+of application (console, gui) and library (static, shared)
 
 
 # project-version [ru]
 
-Пример хранения, модификации и отображения информации о версии проекта,
+Хранение, модификация и отображение информации о версии проекта,
 применительно к приложению (консольному, графическому) и
-библиотеке (динамической, статической)
+библиотеке (статической, динамической)

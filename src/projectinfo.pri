@@ -125,6 +125,8 @@ defineTest(write_project_info) {
             $$parse_project_version($$PROJECT_VERSION, MINOR))
         write_key_value(PROJECT_PATCH_VERSION, \
             $$parse_project_version($$PROJECT_VERSION, PATCH))
+
+        # т.к. $$PROJECT_BUILD_NUMBER используется в $$VERSION и в $$BUILD_INFO
         !infile($$PROJECT_BUILD_DIR/.qmake.cache, PROJECT_BUILD_NUMBER) {
             write_key_value(PROJECT_BUILD_NUMBER, \
                 $$parse_project_version($$PROJECT_VERSION, BUILD))

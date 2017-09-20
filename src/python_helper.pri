@@ -8,6 +8,10 @@ win32: error(platform windows not supported ($$basename(_FILE_))) # HACK
 defineReplace(get_python_version) {
     !is_app_installed(python): return ()
     unix: COMMAND = echo `python -V 2>&1 | grep -Po \'(?<=Python )(.+)\'`
+
+    # BUG: Под Windows не работает, а под Linux создает файл nul
+    # win32: command = python -V 1>nul 2>nul && echo %errorlevel%
+
     RESULT = $$system($$COMMAND)
     return ($$RESULT)
 }

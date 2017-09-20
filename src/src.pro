@@ -5,5 +5,5 @@ CONFIG += ordered
 SUBDIRS += \
     console \
     gui \
-    shared \
-    static
+    static \
+    shared
