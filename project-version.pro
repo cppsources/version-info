@@ -1,6 +1,9 @@
 include(src/projectinfo.pri)
 include(src/qmake_helper.pri)
 
+!is_project_configured(): \
+    error(qmake: project is not yet configured)
+
 TEMPLATE = subdirs
 
 SUBDIRS = \
@@ -10,11 +13,11 @@ VERSION = 1.2.3.4
 BUILD_INFO = 2017-07-11_11:50:48.4~gi2
 
 init_qmake_cache($$PWD, $$OUT_PWD)
-#write_project_info($$_PRO_FILE_, $$VERSION, $$BUILD_INFO)
-write_project_info($$_PRO_FILE_, , $$BUILD_INFO)
+write_project_info($$_PRO_FILE_, $$VERSION, $$BUILD_INFO)
+# write_project_info($$_PRO_FILE_, , $$BUILD_INFO) // INFO: error, skip arg
 
-OTHER_FILES += \
-    README.md
+OTHER_FILES = \
+    README
 
 # TODO: Выяснить зачем используется export
 

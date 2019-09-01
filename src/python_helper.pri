@@ -1,31 +1,32 @@
 include(qmake_helper.pri)
 
-win32: error(platform windows not supported ($$basename(_FILE_))) # HACK
-
 # @brief get_python_version возвращает версию установленного Python
-# @return если Python установлен, то версия в формате MAJOR.MINOR.PATCH, иначе
-# пустая строка
+# @return если Python установлен, то возвращается версия в формате
+# MAJOR.MINOR.PATCH, иначе пустая строка
 defineReplace(get_python_version) {
-    !is_app_installed(python): return ()
-    unix: COMMAND = echo `python -V 2>&1 | grep -Po \'(?<=Python )(.+)\'`
+    win32: error(qmake: windows platform not supported in the \
+        function \'get_python_version()\')
 
-    # BUG: Под Windows не работает, а под Linux создает файл nul
-    # win32: command = python -V 1>nul 2>nul && echo %errorlevel%
+    !is_app_installed(python): return ()
+    COMMAND = echo `python -V 2>&1 | grep -Po \'(?<=Python )(.+)\'`
 
     RESULT = $$system($$COMMAND)
     return ($$RESULT)
 }
 
-# @brief is_python_supported_version_installed определяет, соответствует ли
-# версии установленного Python, одной из указанных версий
-# @param PY_VERS список версий Python, разделенных запятыми или пробелами
+# @brief is_python_versions_installed определяет, соответствует ли версии
+# установленного Python, одной из указанных версий
+# @param PY_VERSIONS список версий Python, разделенных запятыми или пробелами
 # @return true - соответствует, иначе false
-defineTest(is_python_supported_version_installed) {
-    PY_VERS = $$ARGS
-    count(PY_VERS, 0): error(qmake: too few or to many arguments in the \
-        function \'is_python_supported_version_installed(version)\')
+defineTest(is_python_versions_installed) {
+    win32: error(qmake: windows platform not supported in the \
+        function \'is_python_versions_installed(py_versions)\')
 
-    PY_VER = $$get_python_version()
-    contains(PY_VERS, $$PY_VER): return (true)
+    PY_VERSIONS = $$ARGS
+    count(PY_VERSIONS, 0): error(qmake: too few or to many arguments in the \
+        function \'is_python_versions_installed(py_versions)\')
+
+    PY_VERSION = $$get_python_version()
+    contains(PY_VERSIONS, $$PY_VERSION): return (true)
     return (false)
 }

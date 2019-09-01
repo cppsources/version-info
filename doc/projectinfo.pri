@@ -1,16 +1,12 @@
 include(python_helper.pri)
 include(qmake_helper.pri)
 
-win32: error(qmake: windows platform not supported in this \
-    module \'$$basename(_FILE_)\')
+win32: error(platform windows not supported ($$basename(_FILE_))) # HACK
 
-!is_python_versions_installed(2.4.3, 2.7.9): \
-    error(qmake: python version is not supported)
-
-# TODO: заменить $$1 и аналогичные на имена, как в qmake_helper.pri и др.
+!is_python_supported_version_installed(2.4.3, 2.7.9): error(unsupported)
 
 # @brief parse_project_name выделяет имя проекта и возвращает в формате макроса,
-# т. е. в верхнем регистре и "-" (если есть) заменяет на "_"
+# т. е. в верхнем регистре и "-" (если есть) заменено на "_"
 # @param $$1 имя главного pro-файла проекта
 defineReplace(parse_project_name) {
     USE_PROJECTINFO_PY = false
